@@ -1,0 +1,8 @@
+name: TrainingPlugin2
+version: '${version}'
+main: ru.healthanmary.trainingplugin2.TrainingPlugin2
+api-version: '1.16'
+commands:
+  nearbyplayers:
+    aliases: nbp
+    permission: near.use
