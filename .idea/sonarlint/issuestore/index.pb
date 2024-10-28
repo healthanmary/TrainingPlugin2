@@ -37,3 +37,11 @@ Q.idea/sonarlint/securityhotspotstore/9/7/970baa50e23ebc7170c90ad489da06b88b1b93
 gradlew.bat,2\a\2a45a911a8f1836b0b6c5b758962572012d8f8c3
 ?
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
+Å
+Qsrc/main/java/ru/healthanmary/trainingplugin2/suffixmanager/SetSuffixCommand.java,f\c\fc4091dc16adb86b1b5f386cb1ace161f12d4849
+Ç
+Rsrc/main/java/ru/healthanmary/trainingplugin2/suffixmanager/SuffixPlaceholder.java,2\c\2ca17864c956f1ac421c3a0b4ff7aa17b6d43388
+x
+Hsrc/main/java/ru/healthanmary/trainingplugin2/commands/TradeCommand.java,7\f\7fa11465cce735d62930fe18ff824f28481a2b42
+~
+Nsrc/main/java/ru/healthanmary/trainingplugin2/commands/TradeAcceptCommand.java,e\c\ec4b27454e2126056c2531f8dfa31e75604ca0da
