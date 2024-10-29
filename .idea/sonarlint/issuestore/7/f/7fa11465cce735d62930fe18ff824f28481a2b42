@@ -1,0 +1,18 @@
+
+“	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¾şü»8¹…ŠÁ­2J$7ed61b80-481c-4013-8419-51673c4baf46
+“	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŒèöÊ8º…ŠÁ­2J$37f1de4f-5ed1-449c-b1f1-6a3592702617
+˜	java:S117("QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(†ıÔáúÿÿÿÿ8º…ŠÁ­2J$c68eba80-3f12-4b4d-9e0e-7d1b6c223b9c
+[
+java:S3516A"9Refactor this method to not always return the same value.(š’‹™ûÿÿÿÿ8é¯ŠÁ­2
+x
+java:S1172"0Remove this unused method parameter "otherNick".(¯Ü¥‘ûÿÿÿÿ8‡†ŠÁ­2J$274e6fec-7faa-4fc3-96f8-8d2360ff19b1
+y
+java:S1874"6Remove this use of "setDisplayName"; it is deprecated.(ëÿÅî8Œ†ŠÁ­2J$3623595c-b851-4d07-bcc6-9b56cb99957c
+x
+java:S1874)"6Remove this use of "setDisplayName"; it is deprecated.(ÿ¦é	8†ŠÁ­2J$52804aee-a402-48ee-ae14-e93dfbcb59c4
+w
+java:S1874*"/Remove this use of "setLore"; it is deprecated.(şêõùÿÿÿÿ8‘†ŠÁ­2J$5993d0e5-b524-4035-83d2-ef697c8f10db
+T
+java:S18746"7Remove this use of "createInventory"; it is deprecated.(¼õßÎ8ù¯ŠÁ­2
+z
+java:S18747"7Remove this use of "createInventory"; it is deprecated.(éåÆ˜8•†ŠÁ­2J$095ae178-1bc0-4c4f-bb10-e91bfeea2e45

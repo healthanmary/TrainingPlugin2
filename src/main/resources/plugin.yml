@@ -9,5 +9,6 @@ commands:
   trade:
     permission: trade.use
     description: Позволяет безопасно передавать ресурсы между игроками
+  tradeaccept:
 
 softdepend: ["PlaceholderAPI"]

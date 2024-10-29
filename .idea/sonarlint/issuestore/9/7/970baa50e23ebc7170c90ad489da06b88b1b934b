@@ -1,7 +1,7 @@
 
-a
-java:S1700"Rename field "trainingPlugin2"(¨êƒÅ8¬‡÷„©2J$2aceaf2d-213d-4be5-bcc2-962b37340233
 Ã
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(â¶œ48•îò„©2J$2f4ce941-80b7-4958-a902-6014d1dbe51f
-v
-java:S1068"3Remove this unused "trainingPlugin2" private field.(¨êƒÅ8·íù„©2J$51b914b4-aee7-44ec-a0d0-16ca954197fd
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(â¶œ48žÒÞÇ­2J$a390ca41-6277-46a5-a1dc-87880d22dce8
+ž
+java:S1450"[Remove the "tradeCommand" field and declare it as a local variable in the relevant methods.(çœÎæ8¥ÒÞÇ­2J$f92008aa-b940-4eee-bbcb-fabfdf9300a0
+W
+java:S1128"5Remove this unused import 'org.bukkit.entity.Player'.(Î©Øüúÿÿÿÿ8§Ï‹È­2
