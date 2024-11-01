@@ -1,29 +1,28 @@
-package ru.healthanmary.trainingplugin2.tradecmd;
+package ru.healthanmary.trainingplugin2.trade;
 
+
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
-public class TradeAcceptCommand implements CommandExecutor {
-    private TradeCommand tradeCommand;
-    private Map<UUID, UUID> tradeRequestsMap;
-    public TradeAcceptCommand(TradeCommand tradeCommand) {
-        this.tradeCommand = tradeCommand;
-        this.tradeRequestsMap = tradeCommand.getTradeRequests();
-    }
-    private void fillInventory(String otherNick, Inventory inv) {
+public class TradeSession {
+    @Getter
+    public final Player player1;
+    @Getter
+    public final Player player2;
+    private final Inventory invPlayer1;
+    private final Inventory invPlayer2;
+    private boolean readyPlayer1 = false;
+    private boolean readyPlayer2 = false;
+    private Inventory fillInventory(String nick) {
+        Inventory inv = Bukkit.createInventory(null, 54, "Трейд с " + nick);
         ItemStack pink_pane = new ItemStack(Material.MAGENTA_STAINED_GLASS_PANE, 1);
         ItemMeta pink_pane_meta = pink_pane.getItemMeta();
         pink_pane_meta.setDisplayName(" ");
@@ -69,40 +68,23 @@ public class TradeAcceptCommand implements CommandExecutor {
         red_pane_meta.setDisplayName(ChatColor.RED+"Игрок не готов");
         red_pane.setItemMeta(red_pane_meta);
         inv.setItem(53, red_pane);
+        return inv;
     }
-    private void openInventories(Player tradeSender, Player tradeRecieper) {
-        String senderNick = tradeSender.getName();
-        String recipientNick = tradeRecieper.getName();
-        Inventory senderInv = Bukkit.createInventory(null, 54, "Трейд с "+recipientNick);
-        Inventory recipientInv = Bukkit.createInventory(null, 54, "Трейд с "+senderNick);
-        fillInventory(recipientNick, senderInv);
-        fillInventory(senderNick, recipientInv);
+    public TradeSession(Player player1, Player player2) {
+        this.player1 = player1;
+        this.player2 = player2;
 
-        tradeSender.openInventory(senderInv);
-        tradeRecieper.openInventory(recipientInv);
+        this.invPlayer1 = fillInventory(player2.getName());
+        this.invPlayer2 = fillInventory(player1.getName());
+
+        player1.openInventory(invPlayer1);
+        player2.openInventory(invPlayer2);
     }
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("Только для игроков!");
-            return true;
-        }
-
-        Player tradeReciepent = (Player) sender;
-        Player tradeSender = Bukkit.getPlayer(tradeRequestsMap.get(tradeReciepent.getUniqueId()));
-
-        /*null выводит*/ System.out.println("get recipient - " + tradeRequestsMap.get(tradeReciepent.getUniqueId()));
-        if (tradeRequestsMap.get(tradeReciepent.getUniqueId()) == null) {
-            tradeReciepent.sendMessage("У вас нет активных заявок на трейд!");
-            return true;
-        }
-        if (!tradeSender.isOnline()) {
-            tradeReciepent.sendMessage("Отправитель трейда оффлайн!");
-            return true;
-        }
-
-        openInventories(tradeSender, tradeReciepent);
-
-        return true;
+    public Inventory getInventory(Player player) {
+        return player.equals(player1) ? invPlayer1 : invPlayer2;
     }
+    public Player getOtherPlayer(Player player) {
+        return player.equals(player1) ? player2: player1;
+    }
+
 }

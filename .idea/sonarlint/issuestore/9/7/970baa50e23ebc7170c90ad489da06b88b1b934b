@@ -1,7 +1,7 @@
 
 Ã
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(â¶œ48žÒÞÇ­2J$a390ca41-6277-46a5-a1dc-87880d22dce8
-ž
-java:S1450"[Remove the "tradeCommand" field and declare it as a local variable in the relevant methods.(çœÎæ8¥ÒÞÇ­2J$f92008aa-b940-4eee-bbcb-fabfdf9300a0
-W
-java:S1128"5Remove this unused import 'org.bukkit.entity.Player'.(Î©Øüúÿÿÿÿ8§Ï‹È­2
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(â¶œ48èŸƒÌ®2J$b5d05bca-e1e0-4a21-8a60-6869e0506d3e
+¨
+java:S1450"eRemove the "tradeAcceptCmdExecutor" field and declare it as a local variable in the relevant methods.(ÙÁÜ„8ÈéÖÌ®2J$f416b956-b4a6-4eb5-a910-926b8c2af915
+£
+java:S1450"[Remove the "tradeManager" field and declare it as a local variable in the relevant methods.(Ê‰ø¶þÿÿÿÿ8ëŸƒÌ®2J$05a6d131-b7a1-4c1d-96be-bd66fa1041b6

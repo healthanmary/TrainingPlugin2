@@ -1,6 +1,5 @@
-package ru.healthanmary.trainingplugin2.tradecmd;
+package ru.healthanmary.trainingplugin2.trade;
 
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,13 +9,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+public class TradeCmdExecutor implements CommandExecutor {
+    private final TradeAcceptCmdExecutor tradeAcceptCmdExecutor;
 
-public class TradeCommand implements CommandExecutor {
-    @Getter
-    private Map<UUID/*targetPlayer*/, UUID/*tradeSender*/> tradeRequests = new HashMap<>();
+    public TradeCmdExecutor(TradeAcceptCmdExecutor tradeAcceptCmdExecutor) {
+        this.tradeAcceptCmdExecutor = tradeAcceptCmdExecutor;
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
@@ -48,10 +47,9 @@ public class TradeCommand implements CommandExecutor {
             sender.sendMessage("Игрок должен находиться в 10-ти блоках от вас!");
             return true;
         }
+        tradeAcceptCmdExecutor.addRequest(recipient.getUniqueId(), playerSender.getUniqueId());
 
-        tradeRequests.put(recipient.getUniqueId(), playerSender.getUniqueId());
-        System.out.println(tradeRequests.get(recipient.getUniqueId())); // корректно
-        sender.sendMessage("Вы отправили запрос на трейд игроку "+ChatColor.AQUA+recipient.getName());
+        sender.sendMessage("Вы отправили запрос на трейд игроку "+ ChatColor.AQUA+recipient.getName());
         recipient.sendMessage("Вам отправил запрос на трейд игрок " +ChatColor.AQUA+ sender.getName());
         recipient.sendMessage("Чтобы принять его, введите: " + ChatColor.AQUA+"/tradeaccept");
         return true;
