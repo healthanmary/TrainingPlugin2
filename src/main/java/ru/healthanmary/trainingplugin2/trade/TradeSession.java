@@ -59,7 +59,7 @@ public class TradeSession {
 
         ItemStack yellow_pane = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
         ItemMeta yellow_pane_meta = yellow_pane.getItemMeta();
-        yellow_pane_meta.setDisplayName(ChatColor.GREEN+"Подтвердите готовность (ЛКМ)");
+        yellow_pane_meta.setDisplayName(ChatColor.YELLOW+"Подтвердите готовность (ЛКМ)");
         yellow_pane.setItemMeta(yellow_pane_meta);
         inv.setItem(45, yellow_pane);
 
@@ -84,7 +84,17 @@ public class TradeSession {
         return player.equals(player1) ? invPlayer1 : invPlayer2;
     }
     public Player getOtherPlayer(Player player) {
-        return player.equals(player1) ? player2: player1;
+        return player.equals(player1) ? player2 : player1;
     }
-
+    public Inventory getOtherInventory(Player player) {
+        return player.equals(player1) ? getInventory(player2) : getInventory(player1);
+    }
+    public void setReadyPlayer(Player player, boolean readyPlayer) {
+        if (player.equals(player1)) this.readyPlayer1 = readyPlayer;
+        else this.readyPlayer2 = readyPlayer;
+    }
+    public boolean getReadyPlayer(Player player) {
+        if (player.equals(player1)) return readyPlayer1;
+        else return readyPlayer2;
+    }
 }

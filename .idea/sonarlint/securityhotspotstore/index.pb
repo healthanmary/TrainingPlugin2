@@ -48,8 +48,6 @@ Q.idea/sonarlint/securityhotspotstore/5/b/5bbfa66edb4db3c7c33c5181f43510990d3307
 Å
 Q.idea/sonarlint/securityhotspotstore/2/5/25f6469773b9f3ebb994178c1114a60412389f58,0\2\0249f67a7c65cf2eb5887ff566b691e6866b5990
 Å
-Q.idea/sonarlint/securityhotspotstore/7/7/77cba8b8dd5e4d160b43ed4b147abb22d88b170d,f\7\f7577a4f9322dc51d73fe5b1d0e785617d8b2cf3
-Å
 Q.idea/sonarlint/securityhotspotstore/8/8/88a9255124c95bdc913197c120a8d560edc59c8e,9\0\909762385fc6eb20f922a91c6865741308b57f2c
 Å
 Q.idea/sonarlint/securityhotspotstore/e/a/ea7154e9a317ed167c4bb4ecc81e32cf366b723c,e\4\e473d0f905565d5c5c5ab2b86daae2f0d3e4b61f
@@ -93,8 +91,6 @@ G.idea/sonarlint/issuestore/a/8/a8a52112049d840217cfa586a3a399d9502f9b94,f\b\fb
 Q.idea/sonarlint/securityhotspotstore/a/8/a8a52112049d840217cfa586a3a399d9502f9b94,3\f\3ffc2b35597dce786ee8a1cc51b1cd1ce2cea9ce
 w
 G.idea/sonarlint/issuestore/8/8/88a9255124c95bdc913197c120a8d560edc59c8e,a\e\ae9ddf453f55affea2d6b9e3973cac1eb2efb4e1
-Å
-Q.idea/sonarlint/securityhotspotstore/c/d/cdfa43bd92c44ec998c601dec663d756c7ff0701,b\3\b3ecc29ca69e146c1d51daf4d4d8a4007fe2dbb4
 w
 G.idea/sonarlint/issuestore/5/1/516e730a14e71f02fa73f3acd6dc7cea9a9fe002,9\9\99437a72e53e3372cda2bff4e9e442b296b81b2e
 Å
@@ -105,12 +101,6 @@ w
 G.idea/sonarlint/issuestore/2/a/2a45a911a8f1836b0b6c5b758962572012d8f8c3,9\a\9aed88f31eac276604c6355c1adcc0bce1f80fd6
 w
 G.idea/sonarlint/issuestore/2/5/25f6469773b9f3ebb994178c1114a60412389f58,a\e\ae7cd77fed401e477a36e76d65c03291b7e1070d
-Ö
-Usrc/main/java/ru/healthanmary/trainingplugin2/publicChest/PublicChestCmdExecutor.java,c\a\ca91d5211b8ed7f419dab3862603373c92febe47
-Ä
-Psrc/main/java/ru/healthanmary/trainingplugin2/publicChest/ClickMenuListener.java,2\c\2c3725c0f8ddec88a5d28ee1c3c5e49acc450c3c
-Ü
-Vsrc/main/java/ru/healthanmary/trainingplugin2/publicChest/PublicChestCmdExecutor2.java,4\6\46487a89e544c4a5a4f3543a54bfb0ff39436ea1
 y
 Isrc/main/java/ru/healthanmary/trainingplugin2/trade/TradeCmdExecutor.java,a\0\a08f9e67eb3092da29c15656757bd390b11cb36b
 u
