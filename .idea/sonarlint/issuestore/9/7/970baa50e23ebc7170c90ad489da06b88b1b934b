@@ -1,8 +1,8 @@
 
 Ã
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(â¶œ48’Ó¡Ÿ¯2J$653dd180-bb7c-46f4-b431-9547c09a8319
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(â¶œ48’Ó¡Ÿ¯2J$ddbaae23-3e77-48fc-81d9-1f2b870ff8fc
 ¨
-java:S1450"eRemove the "tradeAcceptCmdExecutor" field and declare it as a local variable in the relevant methods.(ÙÁÜ„8•Ó¡Ÿ¯2J$f1c7eb2b-ea87-46fe-8a47-7d8c9ec0f48d
+java:S1450"eRemove the "tradeAcceptCmdExecutor" field and declare it as a local variable in the relevant methods.(ÙÁÜ„8•Ó¡Ÿ¯2J$22428ecf-f9f9-449c-ad69-122c1c62d0b9
 £
 java:S1450
-"[Remove the "tradeManager" field and declare it as a local variable in the relevant methods.(Ê‰ø¶þÿÿÿÿ8•Ó¡Ÿ¯2J$d2e15829-3e07-4861-844a-2e95b845b1d5
+"[Remove the "tradeManager" field and declare it as a local variable in the relevant methods.(Ê‰ø¶þÿÿÿÿ8•Ó¡Ÿ¯2J$6d858849-f01a-4d77-ac99-6a711ffc55e1

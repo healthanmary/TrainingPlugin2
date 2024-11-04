@@ -21,6 +21,8 @@ public class TradeSession {
     private final Inventory invPlayer2;
     private boolean readyPlayer1 = false;
     private boolean readyPlayer2 = false;
+    private int taskidPlayer1;
+    private int taskidPlayer2;
     private Inventory fillInventory(String nick) {
         Inventory inv = Bukkit.createInventory(null, 54, "Трейд с " + nick);
         ItemStack pink_pane = new ItemStack(Material.MAGENTA_STAINED_GLASS_PANE, 1);

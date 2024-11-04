@@ -27,7 +27,6 @@ public class TradeAcceptCmdExecutor implements CommandExecutor {
             sender.sendMessage("Только для игроков!");
             return true;
         }
-
         Player tradeReciepent = (Player) sender;
         Player tradeSender = Bukkit.getPlayer(tradeRequestsMap.get(tradeReciepent.getUniqueId()));
 
@@ -41,7 +40,6 @@ public class TradeAcceptCmdExecutor implements CommandExecutor {
         }
         tradeRequestsMap.remove(tradeReciepent.getUniqueId());
         tradeManager.createTrade(tradeSender, tradeReciepent);
-
         return true;
     }
 }

@@ -18,7 +18,7 @@ public final class TrainingPlugin2 extends JavaPlugin {
         getCommand("nearbyplayers").setExecutor(new NearCommand());
         getCommand("trade").setExecutor(new TradeCmdExecutor(tradeAcceptCmdExecutor));
         getCommand("tradeaccept").setExecutor(tradeAcceptCmdExecutor);
-        getServer().getPluginManager().registerEvents(new TradeListener(tradeManager), this);
+        getServer().getPluginManager().registerEvents(new TradeListener(tradeManager, this), this);
     }
     @Override
     public void onDisable() {

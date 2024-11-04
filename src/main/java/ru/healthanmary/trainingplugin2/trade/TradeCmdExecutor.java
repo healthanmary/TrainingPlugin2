@@ -18,25 +18,26 @@ public class TradeCmdExecutor implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        String prefix = ChatColor.GREEN+"Трейд "+ChatColor.GRAY+"» "+ChatColor.WHITE;
         if (!(sender instanceof Player)) {
-            sender.sendMessage("Доступно только для игроков!");
+            sender.sendMessage(prefix+"Доступно только для игроков!");
             return true;
         }
         Player playerSender = (Player) sender;
 
         if (args.length == 0) {
-            sender.sendMessage("Укажите игрока для обмена!");
+            sender.sendMessage(prefix+"Укажите игрока для обмена!");
             sender.sendMessage("/trade <Ник>");
             return true;
         }
 
         Player recipient = Bukkit.getPlayer(args[0]);
         if (recipient == null || !recipient.isOnline()) {
-            sender.sendMessage("Игрок не найден!");
+            sender.sendMessage(prefix+"Игрок не найден!");
             return true;
         }
         if (recipient.getName().equals(sender.getName())) {
-            sender.sendMessage("Вы не можете отправить трейд самому себе!");
+            sender.sendMessage(prefix+"Вы не можете отправить трейд самому себе!");
             return true;
         }
 
@@ -44,13 +45,13 @@ public class TradeCmdExecutor implements CommandExecutor {
         Location locRecipient = recipient.getLocation();
         double distance = locSender.distance(locRecipient);
         if (distance > 10) {
-            sender.sendMessage("Игрок должен находиться в 10-ти блоках от вас!");
+            sender.sendMessage(prefix+"Игрок должен находиться в 10-ти блоках от вас!");
             return true;
         }
         tradeAcceptCmdExecutor.addRequest(recipient.getUniqueId(), playerSender.getUniqueId());
 
-        sender.sendMessage("Вы отправили запрос на трейд игроку "+ ChatColor.AQUA+recipient.getName());
-        recipient.sendMessage("Вам отправил запрос на трейд игрок " +ChatColor.AQUA+ sender.getName());
+        sender.sendMessage(prefix+"Вы отправили запрос на трейд игроку "+ ChatColor.AQUA+recipient.getName());
+        recipient.sendMessage(prefix+"Вам отправил запрос на трейд игрок " +ChatColor.AQUA+ sender.getName());
         recipient.sendMessage("Чтобы принять его, введите: " + ChatColor.AQUA+"/tradeaccept");
         return true;
     }
