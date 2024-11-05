@@ -2,6 +2,7 @@ package ru.healthanmary.trainingplugin2.trade;
 
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,8 +22,11 @@ public class TradeSession {
     private final Inventory invPlayer2;
     private boolean readyPlayer1 = false;
     private boolean readyPlayer2 = false;
-    private int taskidPlayer1;
-    private int taskidPlayer2;
+    private boolean hasActiveTimer;
+    @Setter @Getter
+    private int taskIdPlayer1;
+    @Setter @Getter
+    private int taskIdPlayer2;
     private Inventory fillInventory(String nick) {
         Inventory inv = Bukkit.createInventory(null, 54, "Трейд с " + nick);
         ItemStack pink_pane = new ItemStack(Material.MAGENTA_STAINED_GLASS_PANE, 1);
@@ -98,5 +102,17 @@ public class TradeSession {
     public boolean getReadyPlayer(Player player) {
         if (player.equals(player1)) return readyPlayer1;
         else return readyPlayer2;
+    }
+
+    public void setHasActiveTimer(boolean hasActiveTimer) {
+        this.hasActiveTimer = hasActiveTimer;
+    }
+
+    public boolean getHasActiveTimer() {
+        return hasActiveTimer;
+    }
+    public void setPlayerTaskID(Player player, int taskID) {
+        if (player.equals(player1)) this.taskIdPlayer1 = taskID;
+        else this.taskIdPlayer1 = taskID;
     }
 }

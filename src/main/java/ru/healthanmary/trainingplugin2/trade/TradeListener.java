@@ -1,6 +1,5 @@
 package ru.healthanmary.trainingplugin2.trade;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,11 +9,11 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import ru.healthanmary.trainingplugin2.TrainingPlugin2;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TradeListener implements Listener {
     private final TradeManager tradeManager;
@@ -23,18 +22,6 @@ public class TradeListener implements Listener {
         this.tradeManager = tradeManager;
         this.trainingPlugin2 = trainingPlugin2;
     }
-//    @EventHandler
-//    public void onInventoryClickEvent(InventoryClickEvent e) {
-//        if(!(e.getWhoClicked() instanceof Player clicker)) return;
-//        TradeSession session = tradeManager.getTradeSession(clicker);
-//        if (session == null) return;
-//        List<Integer> notAllowedSlots = List.of(
-//                4, 5, 6, 7, 8, 13, 14, 15, 16, 22, 23, 24, 25, 31, 32, 33, 34, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52, 53
-//        );
-//        if (e.getClickedInventory() != null && e.getClickedInventory().getType() == InventoryType.CHEST) {
-//            if (notAllowedSlots.contains(e.getSlot())) e.setCancelled(true);
-//        }
-//    }
     @EventHandler
     public void onInventoryClickEvent2(InventoryClickEvent e) {
         if(!(e.getWhoClicked() instanceof Player clicker)) return;
@@ -75,18 +62,11 @@ public class TradeListener implements Listener {
                 red_pane.setItemMeta(red_pane_meta);
                 session.getOtherInventory(clicker).setItem(53, red_pane);
             }
-            if (session.getReadyPlayer(clicker) && session.getReadyPlayer(session.getOtherPlayer(clicker))) {
-                Map<Player, Integer> taskIdMap = new HashMap<>();
-                Player player = clicker;
-                Player player2 = session.getOtherPlayer(clicker);
-                int i = 10;
-                int taskId = Bukkit.getScheduler().runTaskTimer(trainingPlugin2, () -> {
-                    ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE, i);
-                    ItemMeta itemMeta = item.getItemMeta();
-                    itemMeta.setDisplayName(ChatColor.GREEN+"До обмена осталось "+ChatColor.AQUA+i+ChatColor.GREEN+" секунд."+ ChatColor.GRAY+" (ЛКМ для отмены)");
-                    item.setItemMeta(itemMeta);
-                    player.getInventory().setItem(45, item);
-                },0L, 20L).getTaskId();
+            Player player1 = clicker;
+            Player player2 = session.getOtherPlayer(clicker);
+            if (session.getReadyPlayer(player1) && session.getReadyPlayer(player2)) {
+                runTimerBeforeTrade(player1, session);
+                runTimerBeforeTrade(player2, session);
             }
         }
     }
@@ -98,9 +78,7 @@ public class TradeListener implements Listener {
 
         Inventory from = e.getInventory();
         Inventory to = session.player1.equals(clicker) ? session.getInventory(session.player2) : session.getInventory(session.player1);
-//        List<Integer> allowedSlots = List.of(
-//                0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39
-//        );
+//                allowedSlots = 0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39
         List<Integer> notAllowedSlots = List.of(
                 4, 5, 6, 7, 8, 13, 14, 15, 16, 22, 23, 24, 25, 31, 32, 33, 34, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52, 53
         );
@@ -116,24 +94,6 @@ public class TradeListener implements Listener {
             handlePickupItem(e, from, to);
         } else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
             handleMoveToOtherInventory(e, to);
-        }
-    }
-    public void handlePlaceItem(InventoryClickEvent e, Inventory from, Inventory to) {
-        int slot = e.getSlot();
-        ItemStack item = e.getCursor();
-        if (item != null) {
-            to.setItem(slot + 5, item);
-        }
-    }
-    private void handlePickupItem(InventoryClickEvent e, Inventory from, Inventory to) {
-        int slot = e.getSlot();
-        to.setItem(slot + 5, null);
-    }
-    private void handleMoveToOtherInventory(InventoryClickEvent e, Inventory to) {
-        int slot = e.getSlot();
-        ItemStack item = e.getCurrentItem();
-        if (item != null) {
-            to.setItem(slot + 5, item);
         }
     }
     @EventHandler
@@ -164,6 +124,24 @@ public class TradeListener implements Listener {
         otherPlayer.sendMessage(prefix+player.getName()+ChatColor.AQUA+" закрыл меню обмена,"+ChatColor.WHITE+" трейд завершен.");
         otherPlayer.sendMessage("Ресурсы были возвращены.");
     }
+    public void handlePlaceItem(InventoryClickEvent e, Inventory from, Inventory to) {
+        int slot = e.getSlot();
+        ItemStack item = e.getCursor();
+        if (item != null) {
+            to.setItem(slot + 5, item);
+        }
+    }
+    private void handlePickupItem(InventoryClickEvent e, Inventory from, Inventory to) {
+        int slot = e.getSlot();
+        to.setItem(slot + 5, null);
+    }
+    private void handleMoveToOtherInventory(InventoryClickEvent e, Inventory to) {
+        int slot = e.getSlot();
+        ItemStack item = e.getCurrentItem();
+        if (item != null) {
+            to.setItem(slot + 5, item);
+        }
+    }
     private void returnItems(Player player, TradeSession session) {
         List<Integer> allowedSlots = List.of(
                 0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39
@@ -176,15 +154,26 @@ public class TradeListener implements Listener {
         }
     }
     private void runTimerBeforeTrade(Player player, TradeSession session) {
-        int i = 10;
-        int taskId = Bukkit.getScheduler().runTaskTimer(trainingPlugin2, () -> {
-            i--;
-            ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE, i);
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.GREEN+"До обмена осталось "+ChatColor.AQUA+i+ChatColor.GREEN+" секунд."+ ChatColor.GRAY+" (ЛКМ для отмены)");
-            item.setItemMeta(itemMeta);
-            player.getInventory().setItem(45, item);
-            session.getInventory(player).setItem(45, item);
-        },0L, 20L).getTaskId();
+        BukkitTask task = new BukkitRunnable() {
+            private int counter = 10;
+            @Override
+            public void run() {
+                if (counter > 0) {
+                    session.setHasActiveTimer(true);
+                    counter--;
+                    ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE, counter);
+                    ItemMeta itemMeta = item.getItemMeta();
+                    itemMeta.setDisplayName(ChatColor.GREEN + "До обмена осталось " + ChatColor.AQUA + counter +
+                            ChatColor.GREEN + " секунд." + ChatColor.GRAY + " (ЛКМ для отмены)");
+                    item.setItemMeta(itemMeta);
+                    player.getInventory().setItem(45, item);
+                    session.getInventory(player).setItem(45, item);
+                } else {
+                    session.setHasActiveTimer(false);
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(trainingPlugin2, 0L, 20L);
+        session.setPlayerTaskID(player, task.getTaskId());
     }
 }
