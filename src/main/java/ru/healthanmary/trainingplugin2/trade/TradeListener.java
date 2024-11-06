@@ -1,5 +1,6 @@
 package ru.healthanmary.trainingplugin2.trade;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -64,14 +65,41 @@ public class TradeListener implements Listener {
             }
             Player player1 = clicker;
             Player player2 = session.getOtherPlayer(clicker);
-            if (session.getReadyPlayer(player1) && session.getReadyPlayer(player2)) {
+            if (session.getReadyPlayer(player1) && session.getReadyPlayer(player2) && !session.getIsHasActiveTimer()) {
                 runTimerBeforeTrade(player1, session);
                 runTimerBeforeTrade(player2, session);
+            }
+            if (session.getReadyPlayer(player1) && session.getReadyPlayer(player2) && session.getIsHasActiveTimer()) {
+                System.out.println(session.getIsHasActiveTimer());
+                System.out.println(session.getTaskIdPlayer1());
+                System.out.println(session.getTaskIdPlayer2());
+                // Стоп таймеры
+                Bukkit.getScheduler().cancelTask(session.getTaskIdPlayer1());
+                Bukkit.getScheduler().cancelTask(session.getTaskIdPlayer2());
+                // устанавливаем getHasActiveTimerкак false
+                session.setIsHasActiveTimer(false);
+                // отменяем готовность на бэке
+                session.setReadyPlayer(player1, false);
+                session.setReadyPlayer(player2, false);
+                //устанавливем дефолтные инвы
+                ItemStack item = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
+                ItemMeta itemMeta = item.getItemMeta();
+                itemMeta.setDisplayName(ChatColor.YELLOW+"Подтвердите готовность "+ChatColor.GRAY+"(ЛКМ)");
+                item.setItemMeta(itemMeta);
+                session.getInventory(player1).setItem(45, item);
+                session.getInventory(player2).setItem(45, item);
+
+                ItemStack red_pane = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
+                ItemMeta red_pane_meta = red_pane.getItemMeta();
+                red_pane_meta.setDisplayName(ChatColor.RED+"Игрок не готов");
+                red_pane.setItemMeta(red_pane_meta);
+                session.getOtherInventory(player1).setItem(53, red_pane);
+                session.getOtherInventory(player2).setItem(53, red_pane);
             }
         }
     }
     @EventHandler
-    public void onInventoryClickEvent3(InventoryClickEvent e) {
+    public void syncInventories(InventoryClickEvent e) {
         if(!(e.getWhoClicked() instanceof Player clicker)) return;
         TradeSession session = tradeManager.getTradeSession(clicker);
         if (session == null) return;
@@ -155,12 +183,12 @@ public class TradeListener implements Listener {
     }
     private void runTimerBeforeTrade(Player player, TradeSession session) {
         BukkitTask task = new BukkitRunnable() {
-            private int counter = 10;
+            private int counter = 11;
             @Override
             public void run() {
                 if (counter > 0) {
-                    session.setHasActiveTimer(true);
                     counter--;
+                    session.setIsHasActiveTimer(true);
                     ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE, counter);
                     ItemMeta itemMeta = item.getItemMeta();
                     itemMeta.setDisplayName(ChatColor.GREEN + "До обмена осталось " + ChatColor.AQUA + counter +
@@ -169,7 +197,7 @@ public class TradeListener implements Listener {
                     player.getInventory().setItem(45, item);
                     session.getInventory(player).setItem(45, item);
                 } else {
-                    session.setHasActiveTimer(false);
+                    session.setIsHasActiveTimer(false);
                     this.cancel();
                 }
             }

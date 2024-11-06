@@ -104,15 +104,15 @@ public class TradeSession {
         else return readyPlayer2;
     }
 
-    public void setHasActiveTimer(boolean hasActiveTimer) {
+    public void setIsHasActiveTimer(boolean hasActiveTimer) {
         this.hasActiveTimer = hasActiveTimer;
     }
 
-    public boolean getHasActiveTimer() {
+    public boolean getIsHasActiveTimer() {
         return hasActiveTimer;
     }
     public void setPlayerTaskID(Player player, int taskID) {
         if (player.equals(player1)) this.taskIdPlayer1 = taskID;
-        else this.taskIdPlayer1 = taskID;
+        else this.taskIdPlayer2 = taskID;
     }
 }
