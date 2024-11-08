@@ -29,72 +29,48 @@ public class TradeListener implements Listener {
         TradeSession session = tradeManager.getTradeSession(clicker);
         if (session == null) return;
         if (session.getReadyPlayer(clicker)) e.setCancelled(true);
+        InventoryAction action = e.getAction();
+        if (e.getClick() == ClickType.SWAP_OFFHAND) {
+            e.setCancelled(true);
+            Bukkit.getScheduler().runTaskLater(trainingPlugin2, () -> {
+                ItemStack offHandItem = clicker.getInventory().getItemInOffHand();
+                clicker.getInventory().setItemInOffHand(offHandItem);
+            }, 1L);
+        }
+        // Запрет на перемещение шифтом
+        if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+            e.setCancelled(true);
+        }
+        // Запрет на перемещение цифрами
+        if (e.getHotbarButton() != -1 || e.getClick().isKeyboardClick() || e.getClick() == ClickType.NUMBER_KEY) {
+            e.setCancelled(true);
+        }
         List<Integer> notAllowedSlots = List.of(
-                4, 5, 6, 7, 8, 13, 14, 15, 16, 22, 23, 24, 25, 31, 32, 33, 34, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52, 53
+                4, 5, 6, 7, 8, 13, 14, 15, 16, 22, 23, 24, 25, 31, 32, 33, 34, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53
         );
         if (e.getClickedInventory() != null && e.getClickedInventory().getType() == InventoryType.CHEST)
             if (notAllowedSlots.contains(e.getSlot())) e.setCancelled(true);
         if (e.getSlot() == 45) {
-            if (!tradeManager.getTradeSession(clicker).getReadyPlayer(clicker)) {
-                tradeManager.getTradeSession(clicker).setReadyPlayer(clicker, true);
-                ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE, 1);
-                ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.GREEN+"Вы готовы "+ChatColor.GRAY+"(ЛКМ для отмены)");
-                item.setItemMeta(itemMeta);
-                session.getInventory(clicker).setItem(45, item);
-
-                ItemStack itemOther = new ItemStack(Material.LIME_STAINED_GLASS_PANE, 1);
-                ItemMeta itemMetaOther = itemOther.getItemMeta();
-                itemMetaOther.setDisplayName(ChatColor.GREEN+"Игрок готов");
-                itemOther.setItemMeta(itemMetaOther);
-                session.getOtherInventory(clicker).setItem(53, itemOther);
-            }
-            else {
-                tradeManager.getTradeSession(clicker).setReadyPlayer(clicker, false);
-                ItemStack item = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
-                ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.YELLOW+"Подтвердите готовность "+ChatColor.GRAY+"(ЛКМ)");
-                item.setItemMeta(itemMeta);
-                session.getInventory(clicker).setItem(45, item);
-
-                ItemStack red_pane = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
-                ItemMeta red_pane_meta = red_pane.getItemMeta();
-                red_pane_meta.setDisplayName(ChatColor.RED+"Игрок не готов");
-                red_pane.setItemMeta(red_pane_meta);
-                session.getOtherInventory(clicker).setItem(53, red_pane);
+            if (!tradeManager.getTradeSession(clicker).getReadyPlayer(clicker) && !session.getIsHasActiveTimer()) {
+                setReadyInv(session, clicker, true);
+                session.setReadyPlayer(clicker, true);
+            } else if (tradeManager.getTradeSession(clicker).getReadyPlayer(clicker) && !session.getIsHasActiveTimer()) {
+                setReadyInv(session, clicker, false);
+                session.setReadyPlayer(clicker, false);
             }
             Player player1 = clicker;
             Player player2 = session.getOtherPlayer(clicker);
-            if (session.getReadyPlayer(player1) && session.getReadyPlayer(player2) && !session.getIsHasActiveTimer()) {
-                runTimerBeforeTrade(player1, session);
-                runTimerBeforeTrade(player2, session);
-            }
             if (session.getReadyPlayer(player1) && session.getReadyPlayer(player2) && session.getIsHasActiveTimer()) {
-                System.out.println(session.getIsHasActiveTimer());
-                System.out.println(session.getTaskIdPlayer1());
-                System.out.println(session.getTaskIdPlayer2());
-                // Стоп таймеры
                 Bukkit.getScheduler().cancelTask(session.getTaskIdPlayer1());
                 Bukkit.getScheduler().cancelTask(session.getTaskIdPlayer2());
-                // устанавливаем getHasActiveTimerкак false
                 session.setIsHasActiveTimer(false);
-                // отменяем готовность на бэке
                 session.setReadyPlayer(player1, false);
                 session.setReadyPlayer(player2, false);
-                //устанавливем дефолтные инвы
-                ItemStack item = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
-                ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.YELLOW+"Подтвердите готовность "+ChatColor.GRAY+"(ЛКМ)");
-                item.setItemMeta(itemMeta);
-                session.getInventory(player1).setItem(45, item);
-                session.getInventory(player2).setItem(45, item);
-
-                ItemStack red_pane = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
-                ItemMeta red_pane_meta = red_pane.getItemMeta();
-                red_pane_meta.setDisplayName(ChatColor.RED+"Игрок не готов");
-                red_pane.setItemMeta(red_pane_meta);
-                session.getOtherInventory(player1).setItem(53, red_pane);
-                session.getOtherInventory(player2).setItem(53, red_pane);
+                session.setCounter(11);
+                setReadyInv(session, clicker, false);
+                setReadyInv(session, player2, false);
+            } else if (session.getReadyPlayer(player1) && session.getReadyPlayer(player2) && !session.getIsHasActiveTimer()) {
+                runTimerBeforeTrade(player1, session);
             }
         }
     }
@@ -103,7 +79,6 @@ public class TradeListener implements Listener {
         if(!(e.getWhoClicked() instanceof Player clicker)) return;
         TradeSession session = tradeManager.getTradeSession(clicker);
         if (session == null) return;
-
         Inventory from = e.getInventory();
         Inventory to = session.player1.equals(clicker) ? session.getInventory(session.player2) : session.getInventory(session.player1);
 //                allowedSlots = 0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39
@@ -113,16 +88,9 @@ public class TradeListener implements Listener {
         if (e.getClickedInventory() != null && e.getClickedInventory().getType() == InventoryType.CHEST) {
             if (notAllowedSlots.contains(e.getSlot())) return;
         }
-        InventoryAction action = e.getAction();
-        if (session.getReadyPlayer(clicker)) return;
-        if (e.getClickedInventory() != null && e.getClickedInventory().getType() != InventoryType.CHEST) return;
-        if (action == InventoryAction.PLACE_ALL || action == InventoryAction.PLACE_ONE || action == InventoryAction.PLACE_SOME) {
-            handlePlaceItem(e, from, to);
-        } else if (action == InventoryAction.PICKUP_ALL || action == InventoryAction.PICKUP_ONE || action == InventoryAction.PICKUP_SOME) {
-            handlePickupItem(e, from, to);
-        } else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-            handleMoveToOtherInventory(e, to);
-        }
+        Bukkit.getScheduler().runTaskLater(trainingPlugin2, () -> {
+            sync(clicker, session);
+        }, 1L);
     }
     @EventHandler
     public void onInventoryDragEvent(InventoryDragEvent e) {
@@ -137,6 +105,7 @@ public class TradeListener implements Listener {
         Player player = (Player) e.getPlayer();
         TradeSession session = tradeManager.getTradeSession(player);
         if (session == null) return;
+        if (session.getIsHasActiveTimer()) return;
 
         Player player1 = session.getPlayer1();
         Player player2 = session.getPlayer2();
@@ -152,24 +121,6 @@ public class TradeListener implements Listener {
         otherPlayer.sendMessage(prefix+player.getName()+ChatColor.AQUA+" закрыл меню обмена,"+ChatColor.WHITE+" трейд завершен.");
         otherPlayer.sendMessage("Ресурсы были возвращены.");
     }
-    public void handlePlaceItem(InventoryClickEvent e, Inventory from, Inventory to) {
-        int slot = e.getSlot();
-        ItemStack item = e.getCursor();
-        if (item != null) {
-            to.setItem(slot + 5, item);
-        }
-    }
-    private void handlePickupItem(InventoryClickEvent e, Inventory from, Inventory to) {
-        int slot = e.getSlot();
-        to.setItem(slot + 5, null);
-    }
-    private void handleMoveToOtherInventory(InventoryClickEvent e, Inventory to) {
-        int slot = e.getSlot();
-        ItemStack item = e.getCurrentItem();
-        if (item != null) {
-            to.setItem(slot + 5, item);
-        }
-    }
     private void returnItems(Player player, TradeSession session) {
         List<Integer> allowedSlots = List.of(
                 0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39
@@ -182,26 +133,79 @@ public class TradeListener implements Listener {
         }
     }
     private void runTimerBeforeTrade(Player player, TradeSession session) {
+        Player otherPlayer = session.getOtherPlayer(player);
         BukkitTask task = new BukkitRunnable() {
-            private int counter = 11;
             @Override
             public void run() {
-                if (counter > 0) {
+                int counter = session.getCounter();
+                if (counter > 1) {
                     counter--;
                     session.setIsHasActiveTimer(true);
+                    session.setCounter(counter);
                     ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE, counter);
                     ItemMeta itemMeta = item.getItemMeta();
                     itemMeta.setDisplayName(ChatColor.GREEN + "До обмена осталось " + ChatColor.AQUA + counter +
                             ChatColor.GREEN + " секунд." + ChatColor.GRAY + " (ЛКМ для отмены)");
                     item.setItemMeta(itemMeta);
-                    player.getInventory().setItem(45, item);
                     session.getInventory(player).setItem(45, item);
+                    session.getInventory(otherPlayer).setItem(45, item);
                 } else {
+                    String prefix = ChatColor.GREEN+"Трейд "+ChatColor.GRAY+"» "+ChatColor.WHITE;
+                    changeItems(session);
+                    player.closeInventory();
+                    otherPlayer.closeInventory();
+                    player.sendMessage(prefix+"Вы успешно обменялись с игроком " + ChatColor.AQUA+otherPlayer.getName());
+                    otherPlayer.sendMessage(prefix+"Вы успешно обменялись с игроком " + ChatColor.AQUA+player.getName());
                     session.setIsHasActiveTimer(false);
                     this.cancel();
                 }
             }
         }.runTaskTimer(trainingPlugin2, 0L, 20L);
         session.setPlayerTaskID(player, task.getTaskId());
+    }
+    private void sync(Player player, TradeSession session) {
+        List<Integer> allowedSlots = List.of(
+                0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39
+        );
+        Inventory inventory = session.getInventory(player);
+        for (int slot : allowedSlots) {
+            ItemStack item = inventory.getItem(slot);
+            if (item == null) {
+                session.getOtherInventory(player).setItem(slot+5, null);
+            }
+            session.getOtherInventory(player).setItem(slot+5, item);
+        }
+    }
+    private void setReadyInv(TradeSession session, Player player, boolean ready) {
+        ItemStack item = new ItemStack(ready ? Material.LIME_STAINED_GLASS_PANE : Material.YELLOW_STAINED_GLASS_PANE, 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(ready ? ChatColor.GREEN + "Вы готовы " + ChatColor.GRAY + "(ЛКМ для отмены)" : ChatColor.YELLOW + "Подтвердите готовность " + ChatColor.GRAY + "(ЛКМ)");
+        item.setItemMeta(itemMeta);
+        session.getInventory(player).setItem(45, item);
+
+        ItemStack otherPane = new ItemStack(ready ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE, 1);
+        ItemMeta otherPaneMeta = otherPane.getItemMeta();
+        otherPaneMeta.setDisplayName(ready ? ChatColor.GREEN + "Игрок готов" : ChatColor.RED + "Игрок не готов");
+        otherPane.setItemMeta(otherPaneMeta);
+        session.getOtherInventory(player).setItem(53, otherPane);
+    }
+    private void changeItems(TradeSession session) {
+        Player player = session.getPlayer1();
+        Player player2 = session.getPlayer2();
+
+        giveItem(player, session);
+        giveItem(player2, session);
+    }
+    private void giveItem(Player player, TradeSession session) {
+        Player otherPlayer = session.getOtherPlayer(player);
+        List<Integer> allowedSlots = List.of(
+                0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39
+        );
+        for (int slot : allowedSlots) {
+            ItemStack item = session.getInventory(player).getItem(slot);
+            if (item != null) {
+                otherPlayer.getInventory().addItem(item);
+            }
+        }
     }
 }
