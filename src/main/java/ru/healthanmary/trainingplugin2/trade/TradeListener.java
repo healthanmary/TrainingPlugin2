@@ -24,7 +24,7 @@ public class TradeListener implements Listener {
         this.trainingPlugin2 = trainingPlugin2;
     }
     @EventHandler
-    public void onInventoryClickEvent2(InventoryClickEvent e) {
+    public void onInventoryClickEvent(InventoryClickEvent e) {
         if(!(e.getWhoClicked() instanceof Player clicker)) return;
         TradeSession session = tradeManager.getTradeSession(clicker);
         if (session == null) return;
@@ -37,6 +37,9 @@ public class TradeListener implements Listener {
                 clicker.getInventory().setItemInOffHand(offHandItem);
             }, 1L);
         }
+        if (e.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
+            e.setCancelled(true);
+        }
         // Запрет на перемещение шифтом
         if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
             e.setCancelled(true);
@@ -48,9 +51,10 @@ public class TradeListener implements Listener {
         List<Integer> notAllowedSlots = List.of(
                 4, 5, 6, 7, 8, 13, 14, 15, 16, 22, 23, 24, 25, 31, 32, 33, 34, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53
         );
-        if (e.getClickedInventory() != null && e.getClickedInventory().getType() == InventoryType.CHEST)
+        if (e.getClickedInventory().getType() == InventoryType.CHEST)
             if (notAllowedSlots.contains(e.getSlot())) e.setCancelled(true);
         if (e.getSlot() == 45) {
+            e.setCancelled(true);
             if (!tradeManager.getTradeSession(clicker).getReadyPlayer(clicker) && !session.getIsHasActiveTimer()) {
                 setReadyInv(session, clicker, true);
                 session.setReadyPlayer(clicker, true);
@@ -61,8 +65,7 @@ public class TradeListener implements Listener {
             Player player1 = clicker;
             Player player2 = session.getOtherPlayer(clicker);
             if (session.getReadyPlayer(player1) && session.getReadyPlayer(player2) && session.getIsHasActiveTimer()) {
-                Bukkit.getScheduler().cancelTask(session.getTaskIdPlayer1());
-                Bukkit.getScheduler().cancelTask(session.getTaskIdPlayer2());
+                Bukkit.getScheduler().cancelTask(session.getTaskId());
                 session.setIsHasActiveTimer(false);
                 session.setReadyPlayer(player1, false);
                 session.setReadyPlayer(player2, false);
@@ -79,8 +82,6 @@ public class TradeListener implements Listener {
         if(!(e.getWhoClicked() instanceof Player clicker)) return;
         TradeSession session = tradeManager.getTradeSession(clicker);
         if (session == null) return;
-        Inventory from = e.getInventory();
-        Inventory to = session.player1.equals(clicker) ? session.getInventory(session.player2) : session.getInventory(session.player1);
 //                allowedSlots = 0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39
         List<Integer> notAllowedSlots = List.of(
                 4, 5, 6, 7, 8, 13, 14, 15, 16, 22, 23, 24, 25, 31, 32, 33, 34, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52, 53
@@ -105,12 +106,12 @@ public class TradeListener implements Listener {
         Player player = (Player) e.getPlayer();
         TradeSession session = tradeManager.getTradeSession(player);
         if (session == null) return;
-        if (session.getIsHasActiveTimer()) return;
+        if (session.getIsHasActiveTimer() || !session.isActive()) return;
 
         Player player1 = session.getPlayer1();
         Player player2 = session.getPlayer2();
 
-        tradeManager.endTrade(player1, player2);
+        tradeManager.endTrade(player1, player2, session);
         Player otherPlayer = session.getOtherPlayer(player);
         otherPlayer.closeInventory();
 
@@ -152,11 +153,13 @@ public class TradeListener implements Listener {
                 } else {
                     String prefix = ChatColor.GREEN+"Трейд "+ChatColor.GRAY+"» "+ChatColor.WHITE;
                     changeItems(session);
+
                     player.closeInventory();
                     otherPlayer.closeInventory();
                     player.sendMessage(prefix+"Вы успешно обменялись с игроком " + ChatColor.AQUA+otherPlayer.getName());
                     otherPlayer.sendMessage(prefix+"Вы успешно обменялись с игроком " + ChatColor.AQUA+player.getName());
                     session.setIsHasActiveTimer(false);
+                    tradeManager.endTrade(player, otherPlayer, session);
                     this.cancel();
                 }
             }

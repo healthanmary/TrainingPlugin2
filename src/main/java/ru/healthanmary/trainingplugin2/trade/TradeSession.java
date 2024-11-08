@@ -24,11 +24,11 @@ public class TradeSession {
     private boolean readyPlayer2 = false;
     private boolean hasActiveTimer = false;
     @Setter @Getter
-    private int taskIdPlayer1;
-    @Setter @Getter
-    private int taskIdPlayer2;
+    private int taskId;
     @Setter @Getter
     private int counter = 11;
+    @Setter @Getter
+    private boolean isActive = false;
     private Inventory fillInventory(String nick) {
         Inventory inv = Bukkit.createInventory(null, 54, "Трейд с " + nick);
         ItemStack pink_pane = new ItemStack(Material.MAGENTA_STAINED_GLASS_PANE, 1);
@@ -113,7 +113,6 @@ public class TradeSession {
         return hasActiveTimer;
     }
     public void setPlayerTaskID(Player player, int taskID) {
-        if (player.equals(player1)) this.taskIdPlayer1 = taskID;
-        else this.taskIdPlayer2 = taskID;
+        this.taskId = taskID;
     }
 }

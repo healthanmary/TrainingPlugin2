@@ -17,12 +17,15 @@ public class TradeManager {
     }
     public void createTrade(Player player1, Player player2) {
         TradeSession tradeSession = new TradeSession(player1, player2);
+        tradeSession.setActive(true);
         activeTrades.put(player1.getUniqueId(), tradeSession);
         activeTrades.put(player2.getUniqueId(), tradeSession);
     }
-    public void endTrade(Player player1, Player player2) {
+    public void endTrade(Player player1, Player player2, TradeSession tradeSession) {
+        tradeSession.setActive(false);
         activeTrades.remove(player1.getUniqueId());
         activeTrades.remove(player2.getUniqueId());
+
     }
     public Inventory getInventory(Player player) { return player.getInventory();}
     public TradeSession getTradeSession(Player player) {
